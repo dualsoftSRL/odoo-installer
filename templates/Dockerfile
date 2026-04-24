@@ -3,7 +3,9 @@ FROM odoo:18
 USER root
 
 # Paquetes del sistema frecuentes en addons (OCA, localizaciones)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Nota: libpq-dev no se instala porque la imagen odoo:18 ya trae Postgres client moderno.
+# Se usa --fix-broken por si algún addon requiere resolución de deps complejas.
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-broken \
     python3-pip \
     git \
     libldap2-dev \
@@ -11,7 +13,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libxslt1-dev \
     libjpeg-dev \
-    libpq-dev \
     fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
