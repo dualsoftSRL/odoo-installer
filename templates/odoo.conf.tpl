@@ -1,0 +1,20 @@
+[options]
+admin_passwd = ${MASTER_PASSWORD}
+db_host = db
+db_port = 5432
+db_user = odoo
+db_password = ${DB_PASSWORD}
+addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons/enterprise,/mnt/extra-addons/terceros
+data_dir = /var/lib/odoo
+logfile = /var/lib/odoo/odoo.log
+log_level = info
+proxy_mode = True
+list_db = False
+workers = ${WORKERS}
+max_cron_threads = ${CRON_THREADS}
+limit_memory_soft = 671088640
+limit_memory_hard = 805306368
+limit_request = 8192
+limit_time_cpu = 600
+limit_time_real = 1200
+limit_time_real_cron = 0

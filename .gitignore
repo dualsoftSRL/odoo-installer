@@ -1,0 +1,7 @@
+*.log
+.DS_Store
+.vscode/
+*.swp
+*.swo
+.env
+.credentials
