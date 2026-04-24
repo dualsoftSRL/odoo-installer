@@ -34,7 +34,7 @@ if ! curl -fsS --max-time 5 https://github.com >/dev/null 2>&1; then
     exit 1
 fi
 
-# Requiere tar y curl (ya asumidos al llegar aquí) y git no es necesario para descargar el tarball
+# Requiere tar y curl
 for cmd in tar curl; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         err "Falta comando requerido: $cmd"
@@ -56,10 +56,20 @@ fi
 
 tar xzf "$TMPDIR/installer.tar.gz" -C "$TMPDIR"
 
-# El tarball extrae a odoo-installer-<branch>/
-INSTALLER_DIR=$(find "$TMPDIR" -maxdepth 1 -type d -name "odoo-installer-*" | head -1)
-if [[ -z "$INSTALLER_DIR" || ! -f "$INSTALLER_DIR/install.sh" ]]; then
+# El tarball extrae a <repo>-<branch>/ (GitHub puede variar el casing)
+# Buscamos cualquier directorio en TMPDIR que contenga install.sh
+INSTALLER_DIR=""
+for d in "$TMPDIR"/*/; do
+    [[ -d "$d" && -f "${d}install.sh" ]] && INSTALLER_DIR="${d%/}" && break
+done
+
+if [[ -z "$INSTALLER_DIR" ]]; then
     err "Estructura del instalador inesperada. ¿Cambió el repo?"
+    echo "Contenido descargado:" >&2
+    ls -la "$TMPDIR" >&2
+    for d in "$TMPDIR"/*/; do
+        [[ -d "$d" ]] && echo "--- $d ---" >&2 && ls "$d" >&2
+    done
     exit 1
 fi
 
